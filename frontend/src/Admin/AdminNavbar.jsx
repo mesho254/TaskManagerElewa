@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Menu, Dropdown, Avatar } from 'antd';
-import { HomeOutlined, UserOutlined, MenuOutlined, LogoutOutlined } from '@ant-design/icons';
+import { MenuOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../assets/Logo.png';
 import { logout } from '../utils/auth';
+import {jwtDecode} from 'jwt-decode';
 
-const Navbar = () => {
+
+const AdminNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
-  const user = localStorage.getItem('token') !== null;
-  const email = localStorage.getItem('email');
+  const token = localStorage.getItem('token');
+  const user = token ? jwtDecode(token) : null;
+  const email = user ? user.email : null;
+  const role = user ? user.role : null;
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -28,30 +32,18 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/adminLogin');
   };
 
-  const NavLogin = () => {
-    navigate("/login")
-  }
-
-  const NavHome = () => {
-    navigate('/')
-  }
-
-  const NavAbout = () =>{
-    navigate('/about')
-  }
-
-  const NavProf = () => {
-    navigate('/profile')
-  }
+  const NavAdminDashboard = () => {
+    navigate('/adminDashboard');
+  };
 
   const userMenu = (
     <Menu>
-      <Menu.Item key="profile" onClick={NavProf}>
+      <Menu.Item key="profile" onClick={NavAdminDashboard}>
         <UserOutlined />
-        <span>Profile</span>
+        <span>Admin Dashboard</span>
       </Menu.Item>
       <Menu.Item key="logout" onClick={handleLogout}>
         <LogoutOutlined />
@@ -60,14 +52,12 @@ const Navbar = () => {
     </Menu>
   );
 
-
-
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="logo-container" >
-          <img src={Logo} alt="logo" className="logo" onClick={NavHome} />
-         <div className="heading">ElewaTaskManager</div>
+        <div className="logo-container">
+          <img src={Logo} alt="logo" className="logo" onClick={NavAdminDashboard} />
+          <div className="heading">Admin Panel</div>
         </div>
         {isMobile && (
           <div className="menu-icon" onClick={handleMenuToggle}>
@@ -78,37 +68,26 @@ const Navbar = () => {
           mode={isMobile ? 'vertical' : 'horizontal'}
           className={`custom-navbar ${menuOpen ? 'open' : ''}`}
         >
-          <Menu.Item key="home" icon={<HomeOutlined />} onClick={NavHome}>
-            Home
-          </Menu.Item>
-          <Menu.Item key="about" icon={<UserOutlined />} onClick={NavAbout}>
-            About
-          </Menu.Item>
-          {isMobile && user && (
+          {isMobile && role === 'admin' && (
             <Menu.Item key="user" className="user-menu-item">
               <Dropdown overlay={userMenu} trigger={['click']}>
-              <Avatar size="large" style={{ backgroundColor: '#87d068', cursor:"pointer" }}>
+                <Avatar size="large" style={{ backgroundColor: '#87d068', cursor: 'pointer' }}>
                   {email ? email[0].toUpperCase() : ''}
                 </Avatar>
               </Dropdown>
-            </Menu.Item>
-          )}
-          {isMobile && !user && (
-            <Menu.Item key="login" className="register-menu-item">
-              <Button className="register-button" onClick={NavLogin} >Login</Button>
             </Menu.Item>
           )}
         </Menu>
         {!isMobile && (
           <div className="auth-section">
-            {user ? (
+            {role === 'admin' ? (
               <Dropdown overlay={userMenu} trigger={['click']}>
-                <Avatar size="large" style={{ backgroundColor: '#87d068', cursor:"pointer" }}>
+                <Avatar size="large" style={{ backgroundColor: '#87d068', cursor: 'pointer' }}>
                   {email ? email[0].toUpperCase() : ''}
                 </Avatar>
               </Dropdown>
             ) : (
-              <Button className="register-button" onClick={NavLogin} >
+              <Button className="register-button" onClick={() => navigate('/adminLogin')}>
                 Login
               </Button>
             )}
@@ -119,4 +98,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default AdminNavbar;

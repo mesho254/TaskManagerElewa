@@ -1,38 +1,371 @@
-.App {
+/* components/HomePage.css */
+.home-page {
+  background: linear-gradient(135deg, #2980b9, #2c3e50); /* Gradient background */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.home-content {
+  text-align: center;
+  color: #fff;
+}
+
+.home-card {
+  max-width: 700px;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+
+.card-header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.admin-button {
+  color: #fff;
+}
+
+.home-button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.or-divider {
+  display: block;
+  text-align: center;
+  margin: 20px 0;
+  color: #fff;
+}
+
+/*FOOTER STYLES */
+.footer {
+  background-color: #f5f5f5;
+  padding: 20px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.footer-text {
+  display: block;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+
+/*NAVBAR STYLES */
+/* General navbar styling */
+.navbar {
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed; 
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.navbar-container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between; /* Space out navbar items */
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+  width: 60px;
+  padding: 10px;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+.menu-icon {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-menu-item {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+/* Custom navbar menu styling */
+.custom-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px; 
+  z-index: 1000;
+}
+
+.register-button {
+  padding: 0.7em 2.1em;
+  background-color: #007bff;
+  border: none;
   color: white;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.App-link {
-  color: #61dafb;
+/* Responsive styles */
+@media (max-width: 768px) {
+  .menu-icon {
+    display: block; /* Display menu icon for smaller screens */
+  }
+
+  .custom-navbar {
+    display: none; /* Hide menu items on smaller screens */
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .custom-navbar.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute; /* Position menu absolutely */
+    top: calc(100% + 10px); /* Position menu below navbar */
+    left: 0; /* Ensure menu starts from left edge */
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000; /* Ensure menu appears above other content */
+  }
+
+  .register-menu-item, .user-menu-item {
+    width: 100%;
+    text-align: center;
+  }
+
+  .register-button {
+    width: 100%;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/*SIGNUP PAGE STYLES*/
+.signup-page {
+  background: linear-gradient(135deg, #2980b9, #2c3e50); /* Gradient background */
+  height: 90vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.signup-content {
+  text-align: center;
+  color: #fff;
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 50px;
+}
+
+@media (max-width: 768px) {
+  .signup-card{
+    width: 90%;
+    padding: 20px;
   }
 }
+
+
+/*LOGIN PAGE STYLES*/
+.login-page {
+  background: linear-gradient(135deg, #2980b9, #2c3e50); /* Gradient background */
+  min-height: 90vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.login-content {
+  text-align: center;
+  color: #fff;
+  width: 100%;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto; /* Center the card */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 50px;
+}
+
+.login-card .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .login-card {
+    width: 90%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+
+/*ADMIN LOGIN STYLES*/
+.admin-login-page {
+  background: linear-gradient(135deg, #2980b9, #2c3e50); /* Gradient background */
+  min-height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.admin-login-content {
+  text-align: center;
+  color: #fff;
+  width: 100%;
+}
+
+.admin-login-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto; /* Center the card */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.admin-login-card .ant-form-item {
+  margin-bottom: 16px;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .admin-login-card {
+    width: 90%;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-login-card {
+    width: 100%;
+    padding: 5px;
+  }
+}
+
+
+/* ADMIN NAVBAR*/
+/* .navbar {
+  background: #001529;
+  padding: 0 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  cursor: pointer;
+}
+
+.heading {
+  color: #fff;
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.menu-icon {
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.custom-navbar {
+  display: flex;
+  align-items: center;
+}
+
+.custom-navbar.open {
+  display: block;
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+}
+
+.register-button {
+  color: #fff;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.user-menu-item,
+.register-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .custom-navbar {
+    display: none;
+    width: 100%;
+    background: #001529;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    z-index: 1;
+  }
+
+  .custom-navbar.open {
+    display: flex;
+    flex-direction: column;
+  }
+} */
