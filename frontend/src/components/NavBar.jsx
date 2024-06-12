@@ -11,6 +11,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = localStorage.getItem('token') !== null;
   const email = localStorage.getItem('email');
+  const role = localStorage.getItem('role')
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
@@ -49,6 +50,21 @@ const Navbar = () => {
 
   const userMenu = (
     <Menu>
+      {role === 'admin' && (
+        <Menu.Item key="adminDashboard" onClick={() => navigate('/adminDashboard')}>
+          Admin Dashboard
+        </Menu.Item>
+      )}
+      {role === 'manager' && (
+        <Menu.Item key="managerDashboard" onClick={() => navigate('/managerDashboard')}>
+          Manager Dashboard
+        </Menu.Item>
+      )}
+      {role === 'employee' && (
+        <Menu.Item key="EmployeeDashboard" onClick={() => navigate('/EmployeeDashboard')}>
+          Employee Dashboard
+        </Menu.Item>
+      )}
       <Menu.Item key="profile" onClick={NavProf}>
         <UserOutlined />
         <span>Profile</span>
@@ -99,7 +115,7 @@ const Navbar = () => {
             </Menu.Item>
           )}
         </Menu>
-        {!isMobile && (
+        {!isMobile &&  (
           <div className="auth-section">
             {user ? (
               <Dropdown overlay={userMenu} trigger={['click']}>

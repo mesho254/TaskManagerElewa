@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Select, message } from 'antd';
 import axios from 'axios';
-import AdminNavbar from './AdminNavbar';
+import Navbar from '../components/NavBar';
 
 const { Option } = Select;
 
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <AdminNavbar/>
+      <Navbar/>
       <div style={{ padding: '20px' }}>
         <h1>Admin Dashboard</h1>
         <Table columns={columns} dataSource={users} loading={loading} style={{marginTop:"100px", overflowX:"auto"}}/>

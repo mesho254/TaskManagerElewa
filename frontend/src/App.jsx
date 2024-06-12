@@ -8,7 +8,6 @@ import AppFooter from "./components/Footer";
 const Home = lazy(()=> import('./pages/Home'))
 const Login = lazy(()=> import('./components/Login'))
 const SignUp = lazy(()=> import('./components/SignUp'))
-const AdminLogin =lazy(()=> import('./Admin/auth/AdminLogin'))
 const AdminDashboard = lazy(()=> import('./Admin/AdminDashboard'))
 // const Analytics = lazy(()=> import('./Admin/Analytics'))
 const ManagerDashboard = lazy(()=> import('./pages/ManagerDashboard'))
@@ -26,7 +25,6 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/signup" element={<SignUp/>}/>
-          <Route path="/adminLogin" element={<AdminLogin/>}/>
           <Route path="/adminDashboard" element={<AdminDashboard/>}/>
           {/* <Route path="/analytics" element={<Analytics/>}/> */}
           <Route path="/managerDashboard" element={<ManagerDashboard/>}/>

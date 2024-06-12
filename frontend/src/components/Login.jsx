@@ -17,23 +17,28 @@ const Login = () => {
     setIsLoading(true);
     try {
       const { email, password, role } = values;
-
+  
       const response = await axios.post('http://localhost:5000/api/auth/login', {
         email,
         password,
         role,
       });
-
+  
       if (response.status === 200) {
         const decodedToken = jwtDecode(response.data.token);
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('email', decodedToken.email);
         localStorage.setItem('role', decodedToken.role);
         localStorage.setItem('id', decodedToken.id);
-
-        const redirectPath = role === 'manager' ? '/managerDashboard' : '/EmployeeDashboard';
-        navigate(redirectPath);
-
+  
+        if (decodedToken.role === 'admin') {
+          navigate('/adminDashboard');
+        } else if (decodedToken.role === 'manager') {
+          navigate('/managerDashboard');
+        } else {
+          navigate('/EmployeeDashboard');
+        }
+  
         notification.success({
           message: 'Login successful!',
           description: 'You have successfully logged in.',
@@ -57,7 +62,7 @@ const Login = () => {
             Login
           </Title>
           <div className="login-card">
-            <Title level={4}>Login as an Employee or a Manager</Title>
+            <Title level={4}>Login Here</Title>
             <Form form={form} onFinish={handleLogin}>
               {/* <Form.Item name="role" initialValue="other">
                 <Radio.Group>
