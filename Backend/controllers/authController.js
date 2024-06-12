@@ -80,3 +80,22 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Function to get users with the "employee" role only
+exports.getEmployeeUsers = async (req, res) => {
+  try {
+    const employees = await User.find({ role: 'employee' }, '-password'); // Excluding the password field
+    res.status(200).json({ employees });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getManagerUsers = async (req, res) => {
+  try {
+    const managers = await User.find({ role: 'manager' }, '-password'); // Excluding the password field
+    res.status(200).json({ managers });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
