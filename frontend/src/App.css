@@ -53,6 +53,7 @@
   bottom: 0;
   width: 100%;
   text-align: center;
+  z-index: 2000;
 }
 
 .footer-text {
@@ -68,6 +69,7 @@
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: fixed; 
+  z-index: 2000;
 }
 
 .navbar-container {

@@ -14,7 +14,7 @@ const EmployeeDashboard = () => {
 
   const getTasks = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/tasks');
+      const res = await axios.get('http://localhost:5000/api/tasks/userTask');
       setTasks(res.data.tasks);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -23,7 +23,14 @@ const EmployeeDashboard = () => {
 
   const handleStatusChange = async (taskId, status) => {
     try {
-      await axios.put(`/api/tasks/update:${taskId}`, { status });
+      const taskToUpdate = tasks.find(task => task._id === taskId);
+      await axios.put(`http://localhost:5000/api/tasks/update`, {
+        taskId,
+        title: taskToUpdate.title,
+        description: taskToUpdate.description,
+        dueDate: taskToUpdate.dueDate,
+        status
+      });
       // Update the status in the local tasks state
       setTasks(tasks.map(task => task._id === taskId ? { ...task, status } : task));
     } catch (error) {

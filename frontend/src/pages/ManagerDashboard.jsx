@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Card, List, Typography, Button, Spin } from 'antd';
+import { Layout, Menu, Card, Typography, Button, Spin, Table, List } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Navbar from '../components/NavBar';
 import Departments from '../components/Departments';
+import Tasks from '../components/Tasks';
+import Users from '../components/Users';
 
 const { Sider, Content } = Layout;
 const { Title } = Typography;
@@ -56,6 +58,36 @@ const ManagerDashboard = () => {
     fetchDepartments();
   };
 
+  const taskColumns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Due Date',
+      dataIndex: 'dueDate',
+      key: 'dueDate',
+      render: (text) => new Date(text).toLocaleDateString(),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+    },
+    {
+      title: 'Assigned To',
+      dataIndex: ['assignedTo', 'name'], 
+      key: 'assignedTo',
+      render: (assignedTo) => assignedTo ? assignedTo : 'Unassigned',
+    },
+  ];
+
   return (
     <>
       <Navbar />
@@ -99,7 +131,7 @@ const ManagerDashboard = () => {
             <Menu.Item key="1">Dashboard</Menu.Item>
             <Menu.Item key="2">Departments</Menu.Item>
             <Menu.Item key="3">Tasks</Menu.Item>
-            <Menu.Item key="4">Users</Menu.Item>
+            <Menu.Item key="4">Employees</Menu.Item>
           </Menu>
         </Sider>
         <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: 'margin-left 0.2s' }}>
@@ -119,38 +151,49 @@ const ManagerDashboard = () => {
               <>
                 {selectedKey === '1' && (
                   <>
-                    <h1 style={{ textAlign: 'center' , marginTop:"100px"}}>Manager Dashboard</h1>
+                    <h1 style={{ textAlign: 'center', marginTop: "100px" }}>Manager Dashboard</h1>
                     <Title level={2}>Departments</Title>
-                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginBottom: '24px', marginTop:"50px" }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', overflowX: 'auto', marginBottom: '24px', marginTop: "50px" }}>
                       {departments.map((dept) => (
                         <Card
                           key={dept._id}
                           title={dept.name}
                           style={{ width: 300, margin: '0 24px 24px 0', cursor: 'pointer' }}
                         >
-                          <p>{dept.description}</p>
+                          <List
+                dataSource={dept.employees ? dept.employees.slice(0, 3) : []}
+                renderItem={(employee) => (
+                  <List.Item key={employee._id}>
+                    <List.Item.Meta
+                      title={employee.name}
+                      description={employee.email}
+                    />
+                    <p>{employee.role}</p>
+                  </List.Item>
+                )}
+              />
                         </Card>
                       ))}
                     </div>
                     <Title level={2}>Tasks</Title>
-                    <List
-                      grid={{ gutter: 16, column: 1 }}
-                      dataSource={tasks}
-                      renderItem={task => (
-                        <List.Item>
-                          <Card title={task.title}>
-                            <p><strong>Description:</strong> {task.description}</p>
-                            <p><strong>Status:</strong> {task.status}</p>
-                            <p><strong>Due Date:</strong> {new Date(task.dueDate).toLocaleDateString()}</p>
-                            <p><strong>Assigned To:</strong> {task.assignedTo.name}</p>
-                          </Card>
-                        </List.Item>
-                      )}
-                    />
+                    <div style={{ overflowY: 'auto', maxHeight: '500px', marginBottom:"100px" }}>
+                      <Table
+                        columns={taskColumns}
+                        dataSource={tasks}
+                        rowKey={(record) => record._id}
+                        pagination={false}
+                      />
+                    </div>
                   </>
                 )}
                 {selectedKey === '2' && (
                   <Departments onUpdate={handleUpdate} />
+                )}
+                {selectedKey === '3' && (
+                  <Tasks onUpdate={handleUpdate} />
+                )}
+                {selectedKey === '4' && (
+                  <Users onUpdate={handleUpdate} />
                 )}
               </>
             )}
