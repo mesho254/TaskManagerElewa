@@ -12,6 +12,25 @@ exports.createDepartment = async (req, res) => {
   }
 };
 
+exports.updateDepartment = async (req, res) => {
+  const { name } = req.body;
+  const { departmentId } = req.params;
+
+  try {
+    const department = await Department.findById(departmentId);
+    if (!department) {
+      return res.status(404).json({ error: 'Department not found' });
+    }
+
+    department.name = name;
+    await department.save();
+
+    res.status(200).json({ message: 'Department updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.addEmployee = async (req, res) => {
   const { departmentId, userId } = req.body;
 

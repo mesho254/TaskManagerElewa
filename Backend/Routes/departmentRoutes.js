@@ -5,7 +5,8 @@ const {
   moveEmployee,
   removeEmployee,
   getAllDepartments,
-  deleteDepartment
+  deleteDepartment,
+  updateDepartment
 } = require('../controllers/departmentController');
 const { protect, authorize } = require('../MiddleWares/authMiddleware');
 
@@ -16,6 +17,7 @@ router.post('/add-employee', addEmployee);
 router.post('/move-employee', moveEmployee);
 router.post('/remove-employee', removeEmployee);
 router.delete('/delete/:departmentId', deleteDepartment);
+router.put('/update/:departmentId', updateDepartment);
 router.get('/', getAllDepartments);
 
 module.exports = router;
