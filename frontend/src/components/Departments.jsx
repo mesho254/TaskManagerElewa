@@ -114,7 +114,7 @@ const Departments = ({ onUpdate }) => {
       setIsAddEmployeeModalVisible(false);
       notification.success({
         message: 'Employee Added',
-        description: 'Employee has been successfully added to the department.'
+        description: `Employee has been successfully added to the ${selectedDepartment.name}`
       });
     } catch (error) {
       console.error('Error adding employee to department:', error);
@@ -194,13 +194,13 @@ const Departments = ({ onUpdate }) => {
       if (onUpdate) onUpdate();
       notification.success({
         message: 'Employee Removed',
-        description: 'Employee has been successfully removed from the department.'
+        description: `Employee has been successfully removed from the ${selectedDepartment.name} .`
       });
     } catch (error) {
       console.error('Error removing employee:', error);
       notification.error({
         message: 'Remove Error',
-        description: 'Failed to remove employee from the department.'
+        description: `Failed to remove employee from the ${selectedDepartment.name}.`
       });
     }
   };
@@ -252,7 +252,7 @@ const Departments = ({ onUpdate }) => {
              <Card
              key={dept._id}
              title={dept.name}
-             style={{ width: '400px', marginBottom: '16px', zIndex: "1" }}
+             style={{ width: '400px', marginBottom: '100px', zIndex: "1" }}
              extra={
                <>
                <Tooltip title="Edit Department">
@@ -265,7 +265,7 @@ const Departments = ({ onUpdate }) => {
              }
            >
               <List
-                dataSource={dept.employees ? dept.employees.slice(0, 3) : []}
+                dataSource={dept.employees ? dept.employees : []}
                 renderItem={(employee) => (
                   <List.Item key={employee._id}>
                     <List.Item.Meta

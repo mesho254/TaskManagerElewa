@@ -33,9 +33,12 @@ const Users = () => {
     }
   };
 
-  const getDepartmentName = (userId) => {
-    const department = departments.find(dep => dep.employees.includes(userId));
-    return department ? department.name : 'No Department';
+  const getDepartmentNames = (email) => {
+    const userDepartments = departments
+      .filter(dep => dep.employees.some(emp => emp.email === email))
+      .map(dep => dep.name);
+
+    return userDepartments.length ? userDepartments.join(', ') : 'No Department';
   };
 
   const columns = [
@@ -51,9 +54,9 @@ const Users = () => {
     },
     {
       title: 'Department',
-      dataIndex: ['userId', 'name'], 
+      dataIndex: 'email', 
       key: 'department',
-      render: (userId) => getDepartmentName(userId),
+      render: (email) => getDepartmentNames(email),
     },
     {
       title: 'Role',

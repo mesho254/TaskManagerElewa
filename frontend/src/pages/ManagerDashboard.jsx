@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Card, Typography, Button, Spin, Table, List } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
+import { Layout, Menu, Card, Typography, Button, Spin, Table, List, Drawer, Tooltip } from 'antd';
+import { MenuUnfoldOutlined, } from '@ant-design/icons';
 import axios from 'axios';
 import Navbar from '../components/NavBar';
 import Departments from '../components/Departments';
 import Tasks from '../components/Tasks';
 import Users from '../components/Users';
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
 const { Title } = Typography;
 
 const ManagerDashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedKey, setSelectedKey] = useState(localStorage.getItem('selectedKey') || '1');
-  const [collapsed, setCollapsed] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -52,6 +52,8 @@ const ManagerDashboard = () => {
 
   const handleMenuClick = (e) => {
     setSelectedKey(e.key);
+    localStorage.setItem('selectedKey', e.key);
+    setDrawerVisible(false); 
   };
 
   const handleUpdate = () => {
@@ -82,7 +84,7 @@ const ManagerDashboard = () => {
     },
     {
       title: 'Assigned To',
-      dataIndex: ['assignedTo', 'name'], 
+      dataIndex: ['assignedTo', 'email'], 
       key: 'assignedTo',
       render: (assignedTo) => assignedTo ? assignedTo : 'Unassigned',
     },
@@ -92,49 +94,37 @@ const ManagerDashboard = () => {
     <>
       <Navbar />
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          width={200}
-          style={{ 
-            position: 'fixed', 
-            height: '100vh',
-            zIndex: 1000,
-            overflow: 'auto',
-            left: 0,
-            top: 112,
-            bottom: 0,
-            background: '#001529'
-          }}
+      <Tooltip title="Open Menus" >
+        <Button
+          type="primary"
+          onClick={() => setDrawerVisible(true)}
+          style={{ position: 'fixed', top: 114, left: 65, zIndex: 1000 }}
+          className='menu-task'
         >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-              color: 'white',
-              margin: '10px',
-              display: 'block',
-            }}
-          />
+          <MenuUnfoldOutlined /> Open Menu
+        </Button>
+        </Tooltip>
+        <Drawer
+          title="Close"
+          placement="left"
+          closable={true}
+          onClose={() => setDrawerVisible(false)}
+          visible={drawerVisible}
+          style={{marginTop:"110px"}}
+        >
           <Menu
-            theme="dark"
+            theme="light"
             mode="inline"
             selectedKeys={[selectedKey]}
             onClick={handleMenuClick}
-            style={{ borderRight: 0 }}
           >
             <Menu.Item key="1">Dashboard</Menu.Item>
             <Menu.Item key="2">Departments</Menu.Item>
             <Menu.Item key="3">Tasks</Menu.Item>
             <Menu.Item key="4">Employees</Menu.Item>
           </Menu>
-        </Sider>
-        <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: 'margin-left 0.2s' }}>
+        </Drawer>
+        <Layout style={{ marginLeft: 0, transition: 'margin-left 0.2s' }}>
           <Content
             className="site-layout-background"
             style={{

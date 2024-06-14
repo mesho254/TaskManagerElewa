@@ -190,7 +190,7 @@ const Tasks = () => {
     },
     {
       title: 'Assigned To',
-      dataIndex: ['assignedTo', 'name'], 
+      dataIndex: ['assignedTo', 'email'], 
       key: 'assignedTo',
       render: (assignedTo) => assignedTo ? assignedTo : 'Unassigned',
     },
@@ -222,7 +222,7 @@ const Tasks = () => {
   return (
     <div style={{ padding: '16px' }}>
       <h1 style={{ textAlign: "center", marginTop: "100px" }}>Tasks</h1>
-      <Button type="primary" style={{ marginBottom: '16px' }} onClick={showAddModal}>
+      <Button type="primary" style={{ marginBottom: '16px'  }} onClick={showAddModal}>
         Add New Task <PlusCircleOutlined />
       </Button>
       {loading ? (
@@ -235,6 +235,7 @@ const Tasks = () => {
           columns={columns}
           rowKey={(record) => record._id}
           pagination={false}
+          style={{overflowY:"auto", overflowX:"auto"}}
         />
       )}
 
@@ -380,7 +381,7 @@ const Tasks = () => {
             <Select>
               {employees.map(employee => (
                 <Option key={employee._id} value={employee._id}>
-                  {employee.name}
+                  {employee.email}
                 </Option>
               ))}
             </Select>
