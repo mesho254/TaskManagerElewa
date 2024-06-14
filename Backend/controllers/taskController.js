@@ -26,6 +26,11 @@ exports.updateTask = async (req, res) => {
     task.description = description;
     task.dueDate = dueDate;
     task.status = status;
+
+    if (status === 'done' && !task.completedAt) {
+      task.completedAt = new Date();
+    }
+
     await task.save();
 
     res.status(200).json({ task });
@@ -47,7 +52,7 @@ exports.deleteTask = async (req, res) => {
 
 exports.getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find().populate('assignedTo', 'name');
+    const tasks = await Task.find().populate('assignedTo','email');
     res.status(200).json({ tasks });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching tasks', error });

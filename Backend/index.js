@@ -6,6 +6,7 @@ const cors = require('cors');
 const corsOptions={origin:"*",credentials:true,optionSuccessStatus:200};
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./Swagger.json');
+const path = require('path')
 
 const app = express();
 // Load env variables
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 app.use('/api/auth', require('./Routes/authRoutes'));
 app.use('/api/departments', require('./Routes/departmentRoutes'));
 app.use('/api/tasks', require('./Routes/taskRoutes'));
+app.use('/uploads', express.static(path.join(__dirname, './uploads/')));
 
 const PORT = process.env.PORT || 5000;
 

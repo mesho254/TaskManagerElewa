@@ -1,6 +1,9 @@
 const User = require('../Models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
 
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
@@ -95,6 +98,55 @@ exports.getManagerUsers = async (req, res) => {
   try {
     const managers = await User.find({ role: 'manager' }, '-password'); // Excluding the password field
     res.status(200).json({ managers });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// Ensure 'uploads' directory exists
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
+// Multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
+
+exports.uploadProfileImage = [
+  upload.single('profileImage'),
+  async (req, res) => {
+    try {
+      const email = req.body.email;
+      const profileImage = req.file.filename; // Store the filename, not the full path
+
+      const user = await User.findOneAndUpdate({ email }, { profileImage }, { new: true });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({ profileImage: user.profileImage });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+];
+
+exports.getUser = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email }, '-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

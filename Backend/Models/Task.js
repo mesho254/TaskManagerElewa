@@ -28,6 +28,9 @@ const TaskSchema = new mongoose.Schema({
   department: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Department'
+  },
+  completedAt: {
+    type: Date
   }
 }, { timestamps: true });
 
