@@ -78,7 +78,7 @@ const Users = () => {
           <Spin size="large" />
         </div>
       ) : (
-        <Table dataSource={formattedUsers} columns={columns} />
+        <Table dataSource={formattedUsers} columns={columns} style={{overflowX: "auto"}}/>
       )}
     </div>
   );

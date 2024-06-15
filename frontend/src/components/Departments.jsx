@@ -19,11 +19,21 @@ const Departments = ({ onUpdate }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [newDepartmentId, setNewDepartmentId] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(''); 
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchDepartments();
     fetchEmployees();
   }, []);
+
+  useEffect(() => {
+    if (selectedDepartment) {
+      form.setFieldsValue({
+        name: selectedDepartment.name,
+      });
+    }
+  }, [selectedDepartment, form]);
 
   const fetchDepartments = async () => {
     setLoading(true);
@@ -55,6 +65,7 @@ const Departments = ({ onUpdate }) => {
       await axios.post('http://localhost:5000/api/departments/create', { ...values, employees: addedEmployees.map(emp => emp._id) });
       fetchDepartments();
       setIsAddModalVisible(false);
+      form.resetFields();
       notification.success({
         message: 'Department Added',
         description: 'Department has been successfully added.'
@@ -112,6 +123,7 @@ const Departments = ({ onUpdate }) => {
       });
       fetchDepartments();
       setIsAddEmployeeModalVisible(false);
+      form.resetFields()
       notification.success({
         message: 'Employee Added',
         description: `Employee has been successfully added to the ${selectedDepartment.name}`
@@ -219,6 +231,7 @@ const Departments = ({ onUpdate }) => {
       });
       fetchDepartments();
       setIsMoveModalVisible(false);
+      form.resetFields()
       notification.success({
         message: 'Employee Moved',
         description: 'Employee has been successfully moved to the new department.'
@@ -236,23 +249,37 @@ const Departments = ({ onUpdate }) => {
     setIsMoveModalVisible(false);
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredDepartments = departments.filter(dept =>
+    dept.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div style={{ padding: '16px' }}>
+    <div style={{ padding: '16px'}}>
       <h1 style={{ textAlign: "center", marginTop: "100px" }}>Departments</h1>
       <Button type="primary" style={{ marginBottom: '16px' }} onClick={showAddModal}>
         Create Department <PlusCircleOutlined/>
       </Button>
+      <Input
+        placeholder="Search departments"
+        value={searchQuery}
+        onChange={handleSearch}
+        style={{ marginBottom: '16px' }}
+      />
       {loading ? (
         <div style={{ textAlign: 'center', paddingTop: '50px' }}>
           <Spin size="large" />
         </div>
       ) : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', overflowY:"auto" }}>
-          {departments.map((dept) => (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', overflowY:"auto", marginLeft:"auto", marginRight:"auto" ,marginBottom: '100px',}}>
+          {filteredDepartments.map((dept) => (
              <Card
              key={dept._id}
              title={dept.name}
-             style={{ width: '400px', marginBottom: '100px', zIndex: "1" }}
+             style={{ width: '400px', zIndex: "1", marginLeft:"auto", marginRight:"auto" }}
              extra={
                <>
                <Tooltip title="Edit Department">
@@ -304,7 +331,7 @@ const Departments = ({ onUpdate }) => {
         footer={null}
         onCancel={handleAddModalCancel}
       >
-        <Form onFinish={handleAddModalOk}>
+        <Form form={form} onFinish={handleAddModalOk}>
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
@@ -337,9 +364,7 @@ const Departments = ({ onUpdate }) => {
         onCancel={handleEditModalCancel}
       >
         <Form
-          initialValues={{
-            name: selectedDepartment ? selectedDepartment.name : '',
-          }}
+          form={form}
           onFinish={handleEditModalOk}
         >
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
@@ -360,7 +385,7 @@ const Departments = ({ onUpdate }) => {
         footer={null}
         onCancel={handleAddEmployeeModalCancel}
       >
-        <Form onFinish={handleAddEmployeeModalOk}>
+        <Form form={form} onFinish={handleAddEmployeeModalOk}>
           <Form.Item name="employee" label="Employee" rules={[{ required: true }]}>
             <Select placeholder="Select employee" >
               {employees.map((user) => (
@@ -417,7 +442,7 @@ const Departments = ({ onUpdate }) => {
         onOk={handleMoveModalOk}
         onCancel={handleMoveModalCancel}
       >
-        <Form>
+        <Form form={form}>
           <Form.Item label="New Department">
             <Select
               placeholder="Select new department"

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, message } from 'antd';
+import { Table, Select, message, Modal, Button, Card } from 'antd';
+import { ExclamationCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/NavBar';
 
 const { Option } = Select;
+const { confirm } = Modal;
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -30,8 +33,7 @@ const AdminDashboard = () => {
     try {
       await axios.post('http://localhost:5000/api/auth/assign-role', { userId, role });
       message.success('Role assigned successfully');
-      // Refresh users after role assignment
-      fetchUsers();
+      fetchUsers(); // Refresh users after role assignment
     } catch (error) {
       console.error('Error assigning role:', error);
       if (error.response && error.response.status === 401) {
@@ -39,6 +41,31 @@ const AdminDashboard = () => {
       } else {
         message.error('Failed to assign role');
       }
+    }
+  };
+
+  const showDeleteConfirm = (userId) => {
+    confirm({
+      title: 'Are you sure you want to delete this user?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'This action cannot be undone.',
+      onOk() {
+        handleDelete(userId);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
+  const handleDelete = async (userId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/auth/deleteUser/${userId}`);
+      message.success('User deleted successfully');
+      fetchUsers(); // Refresh users after deletion
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      message.error('Failed to delete user');
     }
   };
 
@@ -74,17 +101,39 @@ const AdminDashboard = () => {
         )
       ),
     },
+    {
+      title: 'Delete User',
+      dataIndex: 'delete user',
+      key: 'delete',
+      render: (_, record) => (
+        isAdmin && (
+          <Button
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => showDeleteConfirm(record._id)}
+          />
+        )
+      ),
+    },
   ];
 
-  return (
+  const isAuthenticated = localStorage.getItem('token') !== null;
+  const role = localStorage.getItem('role');
+  return isAuthenticated && role === 'admin'  ? (
     <>
-      <Navbar/>
+      <Navbar />
       <div style={{ padding: '20px' }}>
-        <h1>Admin Dashboard</h1>
-        <Table columns={columns} dataSource={users} loading={loading} style={{marginTop:"100px", overflowX:"auto"}}/>
+        <h1 style={{ marginTop:"100px", textAlign:"center" }}>Admin Dashboard</h1>
+        <Table columns={columns} dataSource={users} loading={loading} style={{ marginTop: '20px',marginBottom:"100px", overflowX: 'auto' }} />
       </div>
     </>
-  );
+  ):(<Card style={{textAlign: "center", justifyContent:"center", alignItems:"center", margin:"100px 40px"}}>
+    <h1>Login as Admin First</h1>
+   <Link to='/login'>
+   Back to Login</Link>
+
+</Card>)
 };
 
 export default AdminDashboard;

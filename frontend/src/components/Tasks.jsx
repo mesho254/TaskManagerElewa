@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form, Input, Select, Table, notification, Spin, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, PlusCircleOutlined, UserAddOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import moment from 'moment'
 
 const { Option } = Select;
 const { confirm } = Modal;
@@ -9,18 +10,31 @@ const { confirm } = Modal;
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [employees, setEmployees] = useState([]);
-//   const [departments, setDepartments] = useState([]);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isAssignModalVisible, setIsAssignModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const [form] = Form.useForm();
+
 
   useEffect(() => {
     fetchTasks();
     fetchEmployees();
-    // fetchDepartments();
   }, []);
+
+  useEffect(() => {
+    if (selectedTask) {
+      form.setFieldsValue({
+        title: selectedTask.title,
+        description: selectedTask.description,
+        dueDate: selectedTask.dueDate && new Date(selectedTask.dueDate).toISOString().split('T')[0],
+        department: selectedTask.department?._id,
+        assignedTo: selectedTask.assignedTo?._id,
+      });
+    }
+  }, [selectedTask, form]);
 
   const fetchTasks = async () => {
     setLoading(true);
@@ -43,15 +57,6 @@ const Tasks = () => {
     }
   };
 
-//   const fetchDepartments = async () => {
-//     try {
-//       const res = await axios.get('http://localhost:5000/api/departments/');
-//       setDepartments(res.data.departments);
-//     } catch (error) {
-//       console.error('Error fetching departments:', error);
-//     }
-//   };
-
   const showAddModal = () => {
     setIsAddModalVisible(true);
   };
@@ -61,6 +66,7 @@ const Tasks = () => {
       await axios.post('http://localhost:5000/api/tasks/create', values);
       fetchTasks();
       setIsAddModalVisible(false);
+      form.resetFields()
       notification.success({
         message: 'Task Added',
         description: 'Task has been successfully added.'
@@ -166,6 +172,33 @@ const Tasks = () => {
     setIsAssignModalVisible(false);
   };
 
+  const handleSearch = (e) => {
+    setSearchText(e.target.value.toLowerCase());
+  };
+
+  const filteredTasks = tasks.filter((task) =>
+    task.title.toLowerCase().includes(searchText) ||
+    (task.assignedTo && task.assignedTo.email.toLowerCase().includes(searchText))
+  );
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'grey';
+      case 'in progress':
+        return 'blue';
+      case 'done':
+        return 'green';
+      default:
+        return 'grey';
+    }
+  };
+
+  const getStatusTextColor = (status) => {
+    return { color: getStatusColor(status) };
+  };
+
+
   const columns = [
     {
       title: 'Title',
@@ -181,12 +214,25 @@ const Tasks = () => {
       title: 'Due Date',
       dataIndex: 'dueDate',
       key: 'dueDate',
-      render: (text) => new Date(text).toLocaleDateString(),
+      render: (text) => (text ? moment(text).format('DD MMM, YYYY') : 'N/A'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (status) => (
+        <span style={getStatusTextColor(status)}>
+          <span style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            backgroundColor: getStatusColor(status),
+            marginRight: 8
+          }}></span>
+          {status.charAt(0).toUpperCase() + status.slice(1)}
+        </span>
+      ),
     },
     {
       title: 'Assigned To',
@@ -220,22 +266,28 @@ const Tasks = () => {
   ];
 
   return (
-    <div style={{ padding: '16px' }}>
+    <div style={{ padding: '16px', marginBottom:"100px" }}>
       <h1 style={{ textAlign: "center", marginTop: "100px" }}>Tasks</h1>
       <Button type="primary" style={{ marginBottom: '16px'  }} onClick={showAddModal}>
         Add New Task <PlusCircleOutlined />
       </Button>
+      <Input
+        placeholder="Search by title or assigned user email"
+        value={searchText}
+        onChange={handleSearch}
+        style={{ marginBottom: '16px' }}
+      />
       {loading ? (
         <div style={{ textAlign: 'center', paddingTop: '50px' }}>
           <Spin size="large" />
         </div>
       ) : (
         <Table
-          dataSource={tasks}
+          dataSource={filteredTasks}
           columns={columns}
           rowKey={(record) => record._id}
           pagination={false}
-          style={{overflowY:"auto", overflowX:"auto"}}
+          style={{overflowY:"auto", overflowX:"auto", maxHeight:"500px"}}
         />
       )}
 
@@ -246,8 +298,9 @@ const Tasks = () => {
         visible={isAddModalVisible}
         onCancel={handleAddModalCancel}
         footer={null}
+        style={{overflowY:"auto", zIndex:4000, marginBottom:"200px"}}
       >
-        <Form onFinish={handleAddModalOk}>
+        <Form style={{overflowY:"auto", zIndex:4000}} form={form} onFinish={handleAddModalOk} >
           <Form.Item
             name="title"
             label="Task Title"
@@ -267,26 +320,14 @@ const Tasks = () => {
           >
             <Input type="date" />
           </Form.Item>
-          {/* <Form.Item
-            name="department"
-            label="Department"
-          >
-            <Select>
-              {departments.map(dept => (
-                <Option key={dept._id} value={dept._id}>
-                  {dept.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item> */}
           <Form.Item
             name="assignedTo"
             label="Assign To"
           >
-            <Select>
+            <Select style={{overflowY:"auto", zIndex:4000}}>
               {employees.map(employee => (
                 <Option key={employee._id} value={employee._id}>
-                  {employee.name}
+                  {employee.email}
                 </Option>
               ))}
             </Select>
@@ -299,7 +340,7 @@ const Tasks = () => {
         </Form>
       </Modal>
 
-        {/* Edit Tasks Modal */}
+         {/* Edit Task Modal */}
 
       <Modal
         title="Edit Task"
@@ -307,13 +348,10 @@ const Tasks = () => {
         onCancel={handleEditModalCancel}
         footer={null}
       >
-        <Form onFinish={handleEditModalOk} initialValues={{
-          title: selectedTask ? selectedTask.title : '',
-          description: selectedTask ? selectedTask.description : '',
-          dueDate: selectedTask ? new Date(selectedTask.dueDate).toISOString().split('T')[0] : '',
-          department: selectedTask ? selectedTask.department?._id : '',
-          assignedTo: selectedTask ? selectedTask.assignedTo?._id : ''
-        }}>
+        <Form
+          form={form}
+          onFinish={handleEditModalOk}
+        >
           <Form.Item
             name="title"
             label="Task Title"
@@ -333,30 +371,6 @@ const Tasks = () => {
           >
             <Input type="date" />
           </Form.Item>
-          {/* <Form.Item
-            name="department"
-            label="Department"
-          >
-            <Select>
-              {departments.map(dept => (
-                <Option key={dept._id} value={dept._id}>
-                  {dept.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item> */}
-          {/* <Form.Item
-            name="assignedTo"
-            label="Assign To"
-          >
-            <Select>
-              {employees.map(employee => (
-                <Option key={employee._id} value={employee._id}>
-                  {employee.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Save

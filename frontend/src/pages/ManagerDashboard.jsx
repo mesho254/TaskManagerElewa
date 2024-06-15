@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Card, Typography, Button, Spin, Table, List, Drawer, Tooltip } from 'antd';
-import { MenuUnfoldOutlined, } from '@ant-design/icons';
+import { Layout, Menu, Card, Typography, Button, Spin, Table, List, Drawer, Tooltip, Carousel } from 'antd';
+import { MenuUnfoldOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/NavBar';
 import Departments from '../components/Departments';
 import Tasks from '../components/Tasks';
@@ -60,6 +62,23 @@ const ManagerDashboard = () => {
     fetchDepartments();
   };
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'grey';
+      case 'in progress':
+        return 'blue';
+      case 'done':
+        return 'green';
+      default:
+        return 'grey';
+    }
+  };
+
+  const getStatusTextColor = (status) => {
+    return { color: getStatusColor(status) };
+  };
+
   const taskColumns = [
     {
       title: 'Title',
@@ -75,12 +94,25 @@ const ManagerDashboard = () => {
       title: 'Due Date',
       dataIndex: 'dueDate',
       key: 'dueDate',
-      render: (text) => new Date(text).toLocaleDateString(),
+      render: (text) => (text ? moment(text).format('DD MMM, YYYY') : 'N/A'),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (status) => (
+        <span style={getStatusTextColor(status)}>
+          <span style={{
+            display: 'inline-block',
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            backgroundColor: getStatusColor(status),
+            marginRight: 8
+          }}></span>
+          {status.charAt(0).toUpperCase() + status.slice(1)}
+        </span>
+      ),
     },
     {
       title: 'Assigned To',
@@ -90,7 +122,47 @@ const ManagerDashboard = () => {
     },
   ];
 
-  return (
+  const carouselSettings = {
+    dots: true,
+    arrows: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        }
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        }
+      }
+    ]
+  };
+
+  const isAuthenticated = localStorage.getItem('token') !== null;
+  const role = localStorage.getItem('role');
+  return isAuthenticated && role === 'manager'  ? (
     <>
       <Navbar />
       <Layout style={{ minHeight: '100vh' }}>
@@ -98,7 +170,7 @@ const ManagerDashboard = () => {
         <Button
           type="primary"
           onClick={() => setDrawerVisible(true)}
-          style={{ position: 'fixed', top: 114, left: 65, zIndex: 1000 }}
+          style={{ position: 'fixed', top: 114, left: 58, zIndex: 1000 }}
           className='menu-task'
         >
           <MenuUnfoldOutlined /> Open Menu
@@ -142,31 +214,34 @@ const ManagerDashboard = () => {
                 {selectedKey === '1' && (
                   <>
                     <h1 style={{ textAlign: 'center', marginTop: "100px" }}>Manager Dashboard</h1>
-                    <Title level={2}>Departments</Title>
-                    <div style={{ display: 'flex', flexDirection: 'row', overflowX: 'auto', marginBottom: '24px', marginTop: "50px" }}>
-                      {departments.map((dept) => (
-                        <Card
-                          key={dept._id}
-                          title={dept.name}
-                          style={{ width: 300, margin: '0 24px 24px 0', cursor: 'pointer' }}
-                        >
-                          <List
-                dataSource={dept.employees ? dept.employees.slice(0, 3) : []}
-                renderItem={(employee) => (
-                  <List.Item key={employee._id}>
-                    <List.Item.Meta
-                      title={employee.name}
-                      description={employee.email}
-                    />
-                    <p>{employee.role}</p>
-                  </List.Item>
-                )}
-              />
-                        </Card>
-                      ))}
+                    <Title level={2} style={{textAlign:"center"}}>Departments</Title>
+                    <div style={{ marginTop: '50px', marginLeft: 'auto', marginRight: 'auto' }}>
+                      <Carousel {...carouselSettings}>
+                        {departments.map((dept) => (
+                          <div key={dept._id}>
+                            <Card
+                              title={dept.name}
+                              style={{ minWidth: "300px", margin: '20px 10px', cursor: 'pointer', borderRadius: "30px" }}
+                            >
+                              <List
+                                dataSource={dept.employees ? dept.employees.slice(0, 3) : []}
+                                renderItem={(employee) => (
+                                  <List.Item key={employee._id}>
+                                    <List.Item.Meta
+                                      title={employee.name}
+                                      description={employee.email}
+                                    />
+                                    <p>{employee.role}</p>
+                                  </List.Item>
+                                )}
+                              />
+                            </Card>
+                          </div>
+                        ))}
+                      </Carousel>
                     </div>
                     <Title level={2}>Tasks</Title>
-                    <div style={{ overflowY: 'auto', maxHeight: '500px', marginBottom:"100px" }}>
+                    <div style={{ overflowY: 'auto', maxHeight: '500px', marginBottom: "100px", marginLeft: "auto", marginRight: "auto" }}>
                       <Table
                         columns={taskColumns}
                         dataSource={tasks}
@@ -191,7 +266,12 @@ const ManagerDashboard = () => {
         </Layout>
       </Layout>
     </>
-  );
+  ): (<Card style={{textAlign: "center", justifyContent:"center", alignItems:"center", margin:"100px 40px"}}>
+    <h1>Login as Manager First</h1>
+   <Link to='/login'>
+   Back to Login</Link>
+
+</Card>)
 };
 
 export default ManagerDashboard;

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { Table, Select, Layout, Menu, Button, Spin, Input, Drawer, Tooltip, notification } from 'antd';
+import { Table, Select, Layout, Menu, Button, Spin, Input, Drawer, Tooltip, notification, Card } from 'antd';
 import { MenuUnfoldOutlined } from '@ant-design/icons';
 import Navbar from '../components/NavBar';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import CompleteTasks from '../components/Employee/CompleteTasks';
 import TasksInProgress from '../components/Employee/TasksInProgress';
@@ -186,7 +187,9 @@ const EmployeeDashboard = () => {
     },
   ];
 
-  return (
+  const isAuthenticated = localStorage.getItem('token') !== null;
+  const role = localStorage.getItem('role');
+  return isAuthenticated && role === 'employee'  ? (
     <>
       <Navbar />
       <Layout>
@@ -264,7 +267,12 @@ const EmployeeDashboard = () => {
         </Layout>
       </Layout>
     </>
-  );
+  ):(<Card style={{textAlign: "center", justifyContent:"center", alignItems:"center", margin:"100px 40px"}}>
+    <h1>Login as Employee First</h1>
+   <Link to='/login'>
+   Back to Login</Link>
+
+</Card>)
 };
 
 export default EmployeeDashboard;

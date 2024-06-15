@@ -15,6 +15,8 @@ const EmployeeDashboard = lazy(()=> import('./pages/EmployeeDashboard'))
 const PageNotFound = lazy(()=> import('./utils/ErrorBoundary'))
 const About = lazy(()=> import('./pages/About'))
 const Profile = lazy(()=> import('./pages/Profile'))
+const ForgotPassword = lazy(()=> import('./components/forgotPassword'))
+const ResetPassword = lazy(()=> import('./components/PasswordReset'))
 
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
           {/* <Route path="/analytics" element={<Analytics/>}/> */}
           <Route path="/managerDashboard" element={<ManagerDashboard/>}/>
           <Route path="/employeeDashboard" element={<EmployeeDashboard/>}/>
+          <Route path="/forgotPassword" element={<ForgotPassword/>}/>
+          <Route path="/password-reset/:id/:token" element={<ResetPassword/>}/>
           <Route path="/about" element={<About/>}/>
           <Route path="/profile" element={<Profile/>}/>
 
