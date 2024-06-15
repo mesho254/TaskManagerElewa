@@ -30,6 +30,15 @@ app.use('/api/departments', require('./Routes/departmentRoutes'));
 app.use('/api/tasks', require('./Routes/taskRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, './uploads/')));
 
+app.get("/",(req,res)=>{
+  res.status(200).json({
+      team_name:"Mesho Devs",dev_team:["Mesho","Mesho254"].sort()})
+  });
+  
+app.use("*",(req,res)=>{
+  res.status(500).json({status:"error",message:"This route does not exist"})
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
