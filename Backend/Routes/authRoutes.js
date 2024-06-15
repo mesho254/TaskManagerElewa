@@ -7,7 +7,13 @@ const {
   getEmployeeUsers,
   getManagerUsers,
   uploadProfileImage,
-  getUser
+  getUser, 
+  forgotPassword1,
+  resetPassword1, 
+  getResetToken,
+  removeUser, 
+  editUser,
+  changePassword
 } = require('../controllers/authController');
 const { protect, authorize } = require('../MiddleWares/authMiddleware');
 
@@ -21,5 +27,11 @@ router.get('/manager', getManagerUsers);
 router.post('/assign-role', assignRole);
 router.post('/uploadProfileImage', uploadProfileImage);
 router.get('/user/:email', getUser);
+router.post("/forgot-password1", forgotPassword1)
+router.get("/password-reset/:id/:token", getResetToken)
+router.post("/password-reset/:id/:token", resetPassword1)
+router.delete('/deleteUser/:userId', removeUser);
+router.put('/updateUser/:userId', editUser);
+router.put('/changePassword', changePassword);
 
 module.exports = router;
