@@ -25,7 +25,7 @@ const Navbar = () => {
 
   const fetchUserProfileImage = useCallback(async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/auth/user/${email}`);
+      const res = await axios.get(`https://task-manager-elewa-94jv.vercel.app/api/auth/user/${email}`);
       setProfileImage(res.data.user.profileImage);
     } catch (error) {
       console.error('Error fetching user profile image:', error);
@@ -117,7 +117,7 @@ const Navbar = () => {
               <Dropdown overlay={userMenu} trigger={['click']}>
                 <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                   <span style={{ marginRight: '10px' }}>{email}</span>
-                  <Avatar size="large" src={profileImage ? `http://localhost:5000/uploads/${profileImage}` : null} style={{ backgroundColor: '#87d068' }}>
+                  <Avatar size="large" src={profileImage ? `https://task-manager-elewa-94jv.vercel.app/uploads/${profileImage}` : null} style={{ backgroundColor: '#87d068' }}>
                     {!profileImage && email ? email[0].toUpperCase() : ''}
                   </Avatar>
                 </div>
@@ -138,7 +138,7 @@ const Navbar = () => {
               <Dropdown overlay={userMenu} trigger={['click']}>
                 <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                   <span style={{ marginRight: '10px' }}>{email}</span>
-                  <Avatar size="large" src={profileImage ? `http://localhost:5000/uploads/${profileImage}` : null} style={{ backgroundColor: '#87d068' }}>
+                  <Avatar size="large" src={profileImage ? `https://task-manager-elewa-94jv.vercel.app/uploads/${profileImage}` : null} style={{ backgroundColor: '#87d068' }}>
                     {!profileImage && email ? email[0].toUpperCase() : ''}
                   </Avatar>
                 </div>

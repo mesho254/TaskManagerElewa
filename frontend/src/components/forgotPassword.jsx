@@ -24,7 +24,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const url = `http://localhost:5000/api/auth/forgot-password1`;
+      const url = `https://task-manager-elewa-94jv.vercel.app/api/auth/forgot-password1`;
       const { data } = await axios.post(url, { email });
       setEmail("");
       setIsLoading(false);

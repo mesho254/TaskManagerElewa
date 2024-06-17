@@ -38,7 +38,7 @@ const Departments = ({ onUpdate }) => {
   const fetchDepartments = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/departments/');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/departments/');
       setDepartments(res.data.departments);
     } catch (error) {
       console.error('Error fetching departments:', error);
@@ -49,7 +49,7 @@ const Departments = ({ onUpdate }) => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/auth/allUsers');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/auth/allUsers');
       setEmployees(res.data.users);
     } catch (error) {
       console.error('Error fetching employees:', error);
@@ -62,7 +62,7 @@ const Departments = ({ onUpdate }) => {
 
   const handleAddModalOk = async (values) => {
     try {
-      await axios.post('http://localhost:5000/api/departments/create', { ...values, employees: addedEmployees.map(emp => emp._id) });
+      await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/create', { ...values, employees: addedEmployees.map(emp => emp._id) });
       fetchDepartments();
       setIsAddModalVisible(false);
       form.resetFields();
@@ -90,7 +90,7 @@ const Departments = ({ onUpdate }) => {
 
   const handleEditModalOk = async (values) => {
     try {
-      await axios.put(`http://localhost:5000/api/departments/update/${selectedDepartment._id}`, { name: values.name });
+      await axios.put(`https://task-manager-elewa-94jv.vercel.app/api/departments/update/${selectedDepartment._id}`, { name: values.name });
       fetchDepartments();
       setIsEditModalVisible(false);
       notification.success({
@@ -117,7 +117,7 @@ const Departments = ({ onUpdate }) => {
 
   const handleAddEmployeeModalOk = async (values) => {
     try {
-      await axios.post('http://localhost:5000/api/departments/add-employee', {
+      await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/add-employee', {
         departmentId: selectedDepartment._id,
         userId: values.employee,
       });
@@ -166,7 +166,7 @@ const Departments = ({ onUpdate }) => {
 
   const handleDeleteDepartment = async (departmentId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/departments/delete/${departmentId}`);
+      await axios.delete(`https://task-manager-elewa-94jv.vercel.app/api/departments/delete/${departmentId}`);
       fetchDepartments();
       if (onUpdate) onUpdate();
       notification.success({
@@ -198,7 +198,7 @@ const Departments = ({ onUpdate }) => {
 
   const handleRemoveEmployee = async (departmentId, userId) => {
     try {
-      await axios.post('http://localhost:5000/api/departments/remove-employee', {
+      await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/remove-employee', {
         departmentId,
         userId
       });
@@ -224,7 +224,7 @@ const Departments = ({ onUpdate }) => {
 
   const handleMoveModalOk = async () => {
     try {
-      await axios.post('http://localhost:5000/api/departments/move-employee', {
+      await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/move-employee', {
         oldDepartmentId: selectedEmployee.departmentId,
         newDepartmentId,
         userId: selectedEmployee._id

@@ -21,7 +21,7 @@ const Profile = () => {
 
   const fetchUserProfile = useCallback(async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/auth/user/${email}`);
+      const res = await axios.get(`https://task-manager-elewa-94jv.vercel.app/api/auth/user/${email}`);
       const { profileImage, userId, name } = res.data.user;
       setProfileImage(profileImage);
       setUserId(userId);
@@ -47,7 +47,7 @@ const Profile = () => {
     formData.append('email', email);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/uploadProfileImage', formData, {
+      const res = await axios.post('https://task-manager-elewa-94jv.vercel.app/api/auth/uploadProfileImage', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -89,7 +89,7 @@ const Profile = () => {
 
   const handleEdit = async (values) => {
     try {
-      await axios.put(`http://localhost:5000/api/auth/updateUser/${userId}`, values);
+      await axios.put(`https://task-manager-elewa-94jv.vercel.app/api/auth/updateUser/${userId}`, values);
       localStorage.setItem('email', values.email); // Update local storage with new email
       notification.success({ message: 'Profile updated successfully' });
       setIsEditModalVisible(false);
@@ -102,7 +102,7 @@ const Profile = () => {
 
   const handleChangePassword = async (values) => {
     try {
-      await axios.put(`http://localhost:5000/api/auth/changePassword`, { email, ...values });
+      await axios.put(`https://task-manager-elewa-94jv.vercel.app/api/auth/changePassword`, { email, ...values });
       notification.success({ message: 'Password changed successfully' });
       setIsPasswordModalVisible(false);
     } catch (error) {
@@ -138,7 +138,7 @@ const Profile = () => {
         <Card className="profile-card">
           <div style={{ marginBottom: '20px', textAlign: 'center' }}>
             {profileImage ? (
-              <Avatar size={150} src={`http://localhost:5000/uploads/${profileImage}`} />
+              <Avatar size={150} src={`https://task-manager-elewa-94jv.vercel.app/uploads/${profileImage}`} />
             ) : (
               <Avatar size={150} icon={<UserOutlined />} />
             )}

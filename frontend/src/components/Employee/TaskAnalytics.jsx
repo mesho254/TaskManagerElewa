@@ -9,7 +9,7 @@ const TaskAnalytics = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/tasks');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/tasks');
       const userEmail = localStorage.getItem('email');
       prepareData(res.data.tasks.filter(task =>
         task.assignedTo && task.assignedTo.email === userEmail

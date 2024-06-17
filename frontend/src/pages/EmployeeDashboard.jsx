@@ -29,7 +29,7 @@ const EmployeeDashboard = () => {
   const getTasks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/tasks');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/tasks');
       const userEmail = localStorage.getItem('email');
       const filteredTasks = res.data.tasks.filter(task =>
         task.assignedTo && task.assignedTo.email === userEmail
@@ -45,7 +45,7 @@ const EmployeeDashboard = () => {
   const handleStatusChange = async (taskId, status) => {
     try {
       const taskToUpdate = tasks.find(task => task._id === taskId);
-      await axios.put(`http://localhost:5000/api/tasks/update`, {
+      await axios.put(`https://task-manager-elewa-94jv.vercel.app/api/tasks/update`, {
         taskId,
         title: taskToUpdate.title,
         description: taskToUpdate.description,

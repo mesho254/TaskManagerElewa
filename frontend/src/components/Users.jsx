@@ -15,7 +15,7 @@ const Users = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/auth/allUsers');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/auth/allUsers');
       setUsers(res.data.users);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -26,7 +26,7 @@ const Users = () => {
 
   const fetchDepartments = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/departments/');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/departments/');
       setDepartments(res.data.departments);
     } catch (error) {
       console.error('Error fetching departments:', error);

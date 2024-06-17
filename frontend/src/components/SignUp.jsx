@@ -17,7 +17,7 @@ const SignUp = () => {
     try {
       const { name, email, password } = values;
 
-      const response = await axios.post('http://localhost:5000/api/auth/signup', {
+      const response = await axios.post('https://task-manager-elewa-94jv.vercel.app/api/auth/signup', {
         name,
         email,
         password,

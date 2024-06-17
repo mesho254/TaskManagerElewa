@@ -24,7 +24,7 @@ const PasswordReset = () => {
     password: false,
   });
   const param = useParams();
-  const url = `http://localhost:5000/api/auth/password-reset/${param.id}/${param.token}`;
+  const url = `https://task-manager-elewa-94jv.vercel.app/api/auth/password-reset/${param.id}/${param.token}`;
 
   useEffect(() => {
     const verifyUrl = async () => {

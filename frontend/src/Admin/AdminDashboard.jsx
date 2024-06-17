@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/auth/allUsers');
+      const response = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/auth/allUsers');
       setUsers(response.data.users);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -31,7 +31,7 @@ const AdminDashboard = () => {
 
   const handleRoleChange = async (userId, role) => {
     try {
-      await axios.post('http://localhost:5000/api/auth/assign-role', { userId, role });
+      await axios.post('https://task-manager-elewa-94jv.vercel.app/api/auth/assign-role', { userId, role });
       message.success('Role assigned successfully');
       fetchUsers(); // Refresh users after role assignment
     } catch (error) {
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/auth/deleteUser/${userId}`);
+      await axios.delete(`https://task-manager-elewa-94jv.vercel.app/api/auth/deleteUser/${userId}`);
       message.success('User deleted successfully');
       fetchUsers(); // Refresh users after deletion
     } catch (error) {

@@ -31,7 +31,7 @@ const ManagerDashboard = () => {
   const fetchDepartments = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/departments');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/departments');
       setDepartments(res.data.departments);
       setLoading(false);
     } catch (error) {
@@ -43,7 +43,7 @@ const ManagerDashboard = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:5000/api/tasks');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/tasks');
       setTasks(res.data.tasks);
       setLoading(false);
     } catch (error) {

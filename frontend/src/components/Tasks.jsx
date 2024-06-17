@@ -39,7 +39,7 @@ const Tasks = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/tasks');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/tasks');
       setTasks(res.data.tasks);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -50,7 +50,7 @@ const Tasks = () => {
 
   const fetchEmployees = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/auth/employee');
+      const res = await axios.get('https://task-manager-elewa-94jv.vercel.app/api/auth/employee');
       setEmployees(res.data.employees);
     } catch (error) {
       console.error('Error fetching employees:', error);
@@ -63,7 +63,7 @@ const Tasks = () => {
 
   const handleAddModalOk = async (values) => {
     try {
-      await axios.post('http://localhost:5000/api/tasks/create', values);
+      await axios.post('https://task-manager-elewa-94jv.vercel.app/api/tasks/create', values);
       fetchTasks();
       setIsAddModalVisible(false);
       form.resetFields()
@@ -91,7 +91,7 @@ const Tasks = () => {
 
   const handleEditModalOk = async (values) => {
     try {
-      await axios.put('http://localhost:5000/api/tasks/update', { ...values, taskId: selectedTask._id });
+      await axios.put('https://task-manager-elewa-94jv.vercel.app/api/tasks/update', { ...values, taskId: selectedTask._id });
       fetchTasks();
       setIsEditModalVisible(false);
       notification.success({
@@ -127,7 +127,7 @@ const Tasks = () => {
 
   const handleDeleteTask = async (taskId) => {
     try {
-      await axios.delete('http://localhost:5000/api/tasks/delete', { data: { taskId } });
+      await axios.delete('https://task-manager-elewa-94jv.vercel.app/api/tasks/delete', { data: { taskId } });
       fetchTasks();
       notification.success({
         message: 'Task Deleted',
@@ -149,7 +149,7 @@ const Tasks = () => {
 
   const handleAssignModalOk = async (values) => {
     try {
-       await axios.post('http://localhost:5000/api/tasks/assign', {
+       await axios.post('https://task-manager-elewa-94jv.vercel.app/api/tasks/assign', {
         taskId: selectedTask._id,
         userId: values.employee
       });
