@@ -1,11 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
-const connectDB = require('./config/db');
 const cors = require('cors');
 const corsOptions={origin:"*",credentials:true,optionSuccessStatus:200};
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./Swagger.json');
+const mongoose = require('mongoose');
 const path = require('path')
 
 const app = express();
@@ -16,7 +16,19 @@ dotenv.config();
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Connect to database
-connectDB();
+const mongooseOptions={
+  useNewUrlParser:true,
+  useUnifiedTopology:true
+};
+mongoose.connect(process.env.MONGO_URI,
+mongooseOptions,err=>{
+  if(err){
+      console.log(err)
+  }
+  else{
+      console.log("Connected to MongoDB")
+  }
+});
 
 
 // Middleware
