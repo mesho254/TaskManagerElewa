@@ -41,6 +41,7 @@ app.use('/api/auth', require('./Routes/authRoutes'));
 app.use('/api/departments', require('./Routes/departmentRoutes'));
 app.use('/api/tasks', require('./Routes/taskRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, './uploads/')));
+app.use('/public', express.static(path.join(__dirname, './public/')));
 
 app.get("/",(req,res)=>{
   res.status(200).json({
