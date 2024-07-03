@@ -61,17 +61,20 @@ const Departments = ({ onUpdate }) => {
   };
 
   const handleAddModalOk = async (values) => {
+    setLoading(true)
     try {
       await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/create', { ...values, employees: addedEmployees.map(emp => emp._id) });
       fetchDepartments();
       setIsAddModalVisible(false);
       form.resetFields();
+      setLoading(false)
       notification.success({
         message: 'Department Added',
         description: 'Department has been successfully added.'
       });
     } catch (error) {
       console.error('Error adding department:', error);
+      setLoading(false)
       notification.error({
         message: 'Add Error',
         description: 'Failed to add department.'
@@ -89,16 +92,19 @@ const Departments = ({ onUpdate }) => {
   };
 
   const handleEditModalOk = async (values) => {
+    setLoading(true)
     try {
       await axios.put(`https://task-manager-elewa-94jv.vercel.app/api/departments/update/${selectedDepartment._id}`, { name: values.name });
       fetchDepartments();
       setIsEditModalVisible(false);
+      setLoading(false)
       notification.success({
         message: 'Department Updated',
         description: 'Department has been successfully updated.'
       });
     } catch (error) {
       console.error('Error updating department:', error);
+      setLoading(false)
       notification.error({
         message: 'Update Error',
         description: 'Failed to update department.'
@@ -116,6 +122,7 @@ const Departments = ({ onUpdate }) => {
   };
 
   const handleAddEmployeeModalOk = async (values) => {
+    setLoading(true)
     try {
       await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/add-employee', {
         departmentId: selectedDepartment._id,
@@ -124,12 +131,14 @@ const Departments = ({ onUpdate }) => {
       fetchDepartments();
       setIsAddEmployeeModalVisible(false);
       form.resetFields()
+      setLoading(false)
       notification.success({
         message: 'Employee Added',
         description: `Employee has been successfully added to the ${selectedDepartment.name}`
       });
     } catch (error) {
       console.error('Error adding employee to department:', error);
+      setLoading(false)
       notification.error({
         message: 'Add Employee Error',
         description: 'Failed to add employee to the department.'
@@ -165,16 +174,19 @@ const Departments = ({ onUpdate }) => {
   };
 
   const handleDeleteDepartment = async (departmentId) => {
+    setLoading(true)
     try {
       await axios.delete(`https://task-manager-elewa-94jv.vercel.app/api/departments/delete/${departmentId}`);
       fetchDepartments();
       if (onUpdate) onUpdate();
+      setLoading(false)
       notification.success({
         message: 'Department Deleted',
         description: 'Department has been successfully deleted.'
       });
     } catch (error) {
       console.error('Error deleting department:', error);
+      setLoading(false)
       notification.error({
         message: 'Delete Error',
         description: 'Failed to delete department.'
@@ -197,6 +209,7 @@ const Departments = ({ onUpdate }) => {
   };
 
   const handleRemoveEmployee = async (departmentId, userId) => {
+    setLoading(true)
     try {
       await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/remove-employee', {
         departmentId,
@@ -204,12 +217,14 @@ const Departments = ({ onUpdate }) => {
       });
       fetchDepartments();
       if (onUpdate) onUpdate();
+      setLoading(false)
       notification.success({
         message: 'Employee Removed',
         description: `Employee has been successfully removed from the ${selectedDepartment.name} .`
       });
     } catch (error) {
       console.error('Error removing employee:', error);
+      setLoading(false)
       notification.error({
         message: 'Remove Error',
         description: `Failed to remove employee from the ${selectedDepartment.name}.`
@@ -223,6 +238,7 @@ const Departments = ({ onUpdate }) => {
   };
 
   const handleMoveModalOk = async () => {
+    setLoading(true)
     try {
       await axios.post('https://task-manager-elewa-94jv.vercel.app/api/departments/move-employee', {
         oldDepartmentId: selectedEmployee.departmentId,
@@ -232,12 +248,14 @@ const Departments = ({ onUpdate }) => {
       fetchDepartments();
       setIsMoveModalVisible(false);
       form.resetFields()
+      setLoading(false)
       notification.success({
         message: 'Employee Moved',
         description: 'Employee has been successfully moved to the new department.'
       });
     } catch (error) {
       console.error('Error moving employee:', error);
+      setLoading(false)
       notification.error({
         message: 'Move Error',
         description: 'Failed to move employee to the new department.'
@@ -349,8 +367,8 @@ const Departments = ({ onUpdate }) => {
             </Select>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Add Department
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {loading ? 'Adding'  : 'Add Department'}
             </Button>
           </Form.Item>
         </Form>
@@ -371,8 +389,8 @@ const Departments = ({ onUpdate }) => {
             <Input />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Update Department
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {loading ? 'Updating' : 'Update Department'}
             </Button>
           </Form.Item>
         </Form>
@@ -396,8 +414,8 @@ const Departments = ({ onUpdate }) => {
             </Select>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Add Employee
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {loading ? 'Adding Employee' : 'Add Employee'}
             </Button>
           </Form.Item>
         </Form>

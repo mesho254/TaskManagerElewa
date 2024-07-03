@@ -62,10 +62,12 @@ const Tasks = () => {
   };
 
   const handleAddModalOk = async (values) => {
+    setLoading(true)
     try {
       await axios.post('https://task-manager-elewa-94jv.vercel.app/api/tasks/create', values);
       fetchTasks();
       setIsAddModalVisible(false);
+      setLoading(false)
       form.resetFields()
       notification.success({
         message: 'Task Added',
@@ -73,6 +75,7 @@ const Tasks = () => {
       });
     } catch (error) {
       console.error('Error adding task:', error);
+      setLoading(false)
       notification.error({
         message: 'Add Error',
         description: 'Failed to add task.'
@@ -82,6 +85,7 @@ const Tasks = () => {
 
   const handleAddModalCancel = () => {
     setIsAddModalVisible(false);
+    form.resetFields()
   };
 
   const showEditModal = (task) => {
@@ -90,16 +94,19 @@ const Tasks = () => {
   };
 
   const handleEditModalOk = async (values) => {
+    setLoading(true)
     try {
       await axios.put('https://task-manager-elewa-94jv.vercel.app/api/tasks/update', { ...values, taskId: selectedTask._id });
       fetchTasks();
       setIsEditModalVisible(false);
+      setLoading(false)
       notification.success({
         message: 'Task Updated',
         description: 'Task has been successfully updated.'
       });
     } catch (error) {
       console.error('Error updating task:', error);
+      setLoading(false)
       notification.error({
         message: 'Update Error',
         description: 'Failed to update task.'
@@ -126,15 +133,18 @@ const Tasks = () => {
   };
 
   const handleDeleteTask = async (taskId) => {
+    setLoading(true)
     try {
       await axios.delete('https://task-manager-elewa-94jv.vercel.app/api/tasks/delete', { data: { taskId } });
       fetchTasks();
+      setLoading(false)
       notification.success({
         message: 'Task Deleted',
         description: 'Task has been successfully deleted.'
       });
     } catch (error) {
       console.error('Error deleting task:', error);
+      setLoading(false)
       notification.error({
         message: 'Delete Error',
         description: 'Failed to delete task.'
@@ -148,6 +158,7 @@ const Tasks = () => {
   };
 
   const handleAssignModalOk = async (values) => {
+    setLoading(true)
     try {
        await axios.post('https://task-manager-elewa-94jv.vercel.app/api/tasks/assign', {
         taskId: selectedTask._id,
@@ -155,12 +166,14 @@ const Tasks = () => {
       });
       fetchTasks();
       setIsAssignModalVisible(false);
+      setLoading(false)
       notification.success({
         message: 'Employee Assigned',
         description: 'Employee has been successfully assigned to the task.'
       });
     } catch (error) {
       console.error('Error assigning employee:', error);
+      setLoading(false)
       notification.error({
         message: 'Assign Error',
         description: 'Failed to assign employee to the task.'
@@ -333,8 +346,8 @@ const Tasks = () => {
             </Select>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Save
+            <Button type="primary" htmlType="submit" loading={loading}>
+              {loading ? 'Saving' : 'Save'}
             </Button>
           </Form.Item>
         </Form>
@@ -372,8 +385,8 @@ const Tasks = () => {
             <Input type="date" />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Save
+            <Button type="primary" htmlType="submit" loading={loading}>
+            {loading ? 'Saving' : 'Save'}
             </Button>
           </Form.Item>
         </Form>
@@ -401,7 +414,7 @@ const Tasks = () => {
             </Select>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
             {loading ? 'Assigning' : 'Assign'}
             </Button>
           </Form.Item>
